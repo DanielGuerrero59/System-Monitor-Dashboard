@@ -11,12 +11,12 @@
         crow::SimpleApp app; 
 
 
-
+        // looks into our templates folder and loads whats inside as the homepage
         CROW_ROUTE(app, "/")([]() {
-            return "Sheeee"; 
-
-
-        });
+            // This looks into the 'templates' folder automatically
+            auto page = crow::mustache::load("index.html");
+            return page.render();
+            });
        
 
 

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>System Monitor</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #0f0f0f; color: #00ff88; text-align: center; padding: 50px; }
+        .container { border: 2px solid #333; display: inline-block; padding: 30px; border-radius: 15px; background: #1a1a1a; box-shadow: 0 0 20px rgba(0,255,136,0.1); }
+        .progress-bg { background: #333; width: 400px; height: 40px; border-radius: 20px; overflow: hidden; margin: 20px 0; }
+        #bar { background: linear-gradient(90deg, #00ff88, #00bd65); width: 0%; height: 100%; transition: width 0.8s ease-in-out; }
+        h1 { margin-top: 0; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>RAM Usage</h1>
+        <div class="progress-bg">
+            <div id="bar"></div>
+        </div>
+        <h2 id="percent">0%</h2>
+        <p id="details">Total RAM: -- GB</p>
+    </div>
+
+    <script>
+        async function updateStats() {
+            // Fetch the JSON data from your C++ /ram route
+            const response = await fetch('/ram');
+            const data = await response.json();
+
+            // Update the UI
+            document.getElementById('bar').style.width = data.percent_used + '%';
+            document.getElementById('percent').innerText = data.percent_used + '%';
+            
+            // Clean up those trailing decimals for the display
+            document.getElementById('details').innerText = "Total RAM: " + data.total_gb.toFixed(2) + " GB";
+        }
+
+        // Run the update every 2000ms (2 seconds)
+        setInterval(updateStats, 2000);
+        updateStats(); // Run once immediately on load
+    </script>
+</body>
+</html>
